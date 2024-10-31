@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR-Code Generator</title>
+    
+    <!-- Manifest Link -->
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            text-align: center;
+            width: 300px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            color: #666;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #qrcode {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+        }
+
+        #downloadButton {
+            display: none;
+            margin-top: 10px;
+            background-color: #2196F3;
+        }
+
+        footer {
+            background-color: #333; /* Dunkler Hintergrund */
+            color: #fff; /* Weiße Schriftfarbe */
+            text-align: center; /* Text zentriert */
+            padding: 10px 20px; /* Innenabstand */
+            /*width: 100%;  Dehnt den Footer über die gesamte Breite */
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5); /* Schatten-Effekt für Tiefe */
+            position: relative; /* Positionierung für Styling */
+        }
+
+        footer p {
+            margin: 0; /* Entfernt Standard-Margin */
+            font-size: 14px; /* Schriftgröße */
+        }
+
+        footer a {
+            color: #fff; /* Weiße Schriftfarbe für Links */
+            text-decoration: none; /* Keine Unterstreichung */
+        }
+
+        footer a:hover {
+            text-decoration: underline; /* Unterstreicht Links beim Hover */
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>QR-Code Generator</h2>
+
+        <label for="qrInput">Text oder URL eingeben:</label>
+        <input type="text" id="qrInput" placeholder="Text oder URL">
+
+        <label for="size">Auflösung:</label>
+        <select id="size">
+            <option value="128">128 x 128</option>
+            <option value="256">256 x 256</option>
+            <option value="512">512 x 512</option>
+        </select>
+
+        <label for="errorCorrection">Fehlerkorrektur:</label>
+        <select id="errorCorrection">
+            <option value="L">L - Niedrig (7% Datenwiederherstellung)</option>
+            <option value="M">M - Mittel (15% Datenwiederherstellung)</option>
+            <option value="Q">Q - Hoch (25% Datenwiederherstellung)</option>
+            <option value="H">H - Sehr Hoch (30% Datenwiederherstellung)</option>
+        </select>
+
+        <button onclick="generateQRCode()">QR-Code generieren</button>
+        <div id="qrcode"></div>
+        <button id="downloadButton" onclick="downloadQRCode()">QR-Code herunterladen</button>
+    </div>
+
+    
+    <footer>
+        <p>&copy; 2024 QR-Code Generator. All Rights reserved.</p>
+    <p>
+        <a href="https://github.com/alos-source/" target="_blank" rel="noopener noreferrer">
+            Sources on GitHub
+        </a>
+    </p>
+        <p>Last build: <span id="build-timestamp">loading...</span></p>
+    <!--    <p><a href="#">Datenschutz</a> | <a href="#">Impressum</a></p> -->
+    </footer>
+
+    <script src="site.js"></script>
+    <script>
+        function generateQRCode() {
+            const qrCodeContainer = document.getElementById("qrcode");
+            qrCodeContainer.innerHTML = ""; // Clear previous QR code
+
+            const text = document.getElementById("qrInput").value;
+            const size = parseInt(document.getElementById("size").value);
+            const errorCorrection = document.getElementById("errorCorrection").value;
+
+            new QRCode(qrCodeContainer, {
+                text: text,
+                width: size,
+                height: size,
+                correctLevel: QRCode.CorrectLevel[errorCorrection]
+            });
+
+            // Download-Button anzeigen
+            document.getElementById("downloadButton").style.display = "block";
+        }
+
+        function downloadQRCode() {
+            const qrCodeElement = document.querySelector("#qrcode img");
+            if (qrCodeElement) {
+                const qrCodeURL = qrCodeElement.src;
+
+                const downloadLink = document.createElement("a");
+                downloadLink.href = qrCodeURL;
+                downloadLink.download = "QR_Code.png";
+                downloadLink.click();
+            }
+        }
+    </script>
+</body>
+</html>
