@@ -81,29 +81,34 @@
         }
 
         footer {
-            background-color: #333; /* Dunkler Hintergrund */
-            color: #fff; /* Weiße Schriftfarbe */
+            background-color: #333; /* dark background */
+            color: #fff; /* white color */
             text-align: center; /* Text zentriert */
             padding: 10px 20px; /* Innenabstand */
-            /*width: 100%;  Dehnt den Footer über die gesamte Breite */
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5); /* Schatten-Effekt für Tiefe */
-            position: relative; /* Positionierung für Styling */
+            /*width: 100%;  span Footer on full width */
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5); /* Shadow-Effect */
+            position: relative; /* Positioning for Styling */
         }
 
         footer p {
-            margin: 0; /* Entfernt Standard-Margin */
-            font-size: 14px; /* Schriftgröße */
+            margin: 0; /* reset Standard-Margin */
+            font-size: 14px; /* size */
         }
 
         footer a {
-            color: #fff; /* Weiße Schriftfarbe für Links */
-            text-decoration: none; /* Keine Unterstreichung */
+            color: #fff; /* white color for Links */
+            text-decoration: none; /* no underlinings */
         }
 
         footer a:hover {
-            text-decoration: underline; /* Unterstreicht Links beim Hover */
+            text-decoration: underline; /* underline Links on Hover */
         }
 
+        #errorMessage {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
 
     </style>
 </head>
@@ -112,7 +117,7 @@
         <h2>QR-Code Generator</h2>
 
         <label for="qrInput">Text oder URL eingeben:</label>
-        <input type="text" id="qrInput" placeholder="Text oder URL">
+        <input type="text" id="qrInput" placeholder="Text oder URL" maxlength="1000">
 
         <label for="size">Auflösung:</label>
         <select id="size">
@@ -132,6 +137,8 @@
         <button onclick="generateQRCode()">QR-Code generieren</button>
         <div id="qrcode"></div>
         <button id="downloadButton" onclick="downloadQRCode()">QR-Code herunterladen</button>
+        <div id="errorMessage"></div>
+
     </div>
 
     
@@ -156,6 +163,20 @@
             const size = parseInt(document.getElementById("size").value);
             const errorCorrection = document.getElementById("errorCorrection").value;
 
+            // Inputvalidation
+            if (text === "") {
+                errorMessage.textContent = "Bitte geben Sie Text oder eine URL ein.";
+                return;
+            } else if (text.length > 1000) {
+                errorMessage.textContent = "Die Eingabe darf maximal 300 Zeichen lang sein.";
+                return;
+            } else {
+               // Clear message if no error
+                    errorMessage.textContent = ""; // clear message
+            }
+
+    // QR-Code generation
+
             new QRCode(qrCodeContainer, {
                 text: text,
                 width: size,
@@ -163,7 +184,7 @@
                 correctLevel: QRCode.CorrectLevel[errorCorrection]
             });
 
-            // Download-Button anzeigen
+            // Download-Button display
             document.getElementById("downloadButton").style.display = "block";
         }
 
