@@ -7,8 +7,11 @@
     
     <!-- Manifest Link -->
     <link rel="manifest" href="/manifest.json">
+    
+    <!-- External scripts -->
+    <script src="js/qrcodejs/qrcode.min.js"></script> <!-- loaded from submodule -->
+    <script src="site.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body {
             display: flex;
@@ -118,6 +121,8 @@
 
         <label for="qrInput">Text oder URL eingeben:</label>
         <input type="text" id="qrInput" placeholder="Text oder URL" maxlength="1000">
+        
+        <div id="errorMessage"></div>
 
         <label for="size">Auflösung:</label>
         <select id="size">
@@ -137,7 +142,6 @@
         <button onclick="generateQRCode()">QR-Code generieren</button>
         <div id="qrcode"></div>
         <button id="downloadButton" onclick="downloadQRCode()">QR-Code herunterladen</button>
-        <div id="errorMessage"></div>
 
     </div>
 
@@ -153,7 +157,7 @@
     <!--    <p><a href="#">Datenschutz</a> | <a href="#">Impressum</a></p> -->
     </footer>
 
-    <script src="site.js"></script>
+
     <script>
         function generateQRCode() {
             const qrCodeContainer = document.getElementById("qrcode");
@@ -162,6 +166,7 @@
             const text = document.getElementById("qrInput").value;
             const size = parseInt(document.getElementById("size").value);
             const errorCorrection = document.getElementById("errorCorrection").value;
+            const errorMessage = document.getElementById("errorMessage");
 
             // Inputvalidation
             if (text === "") {
